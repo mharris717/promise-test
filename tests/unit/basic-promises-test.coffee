@@ -27,5 +27,3 @@ asyncTest 'calling fulfill outside the promise', ->
     fulfill "Hello"
     QUnit.start()
   , 10
-
-
