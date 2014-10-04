@@ -1,0 +1,17 @@
+<table class="table">
+  <tr>
+    <th>Name</th>
+    <th>Completed</th>
+  </tr>
+
+  {{#each this}}
+    <tr class="todo">
+      <td>{{name}}</td>
+      <td>
+        {{input type="checkbox" checked=completed}}
+      </td>
+    </tr>
+  {{/each}}
+</table>
+
+<button {{action "save"}}>Save</button>
