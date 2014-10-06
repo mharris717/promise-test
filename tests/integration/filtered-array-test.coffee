@@ -1,5 +1,6 @@
 `import startApp from '../helpers/start-app'`
 `import pretenderServer from '../helpers/pretender-server'`
+`import standardTest from '../helpers/standard-test'`
 `import Ember from 'ember'`
 
 Promise = Ember.RSVP.Promise
@@ -17,37 +18,6 @@ module 'Integration - Filtered Array',
     server.shutdown()
 
     Pretender.findFunc = null
-
-shouldHaveTodos = (num) ->
-  visit("/todos").then ->
-    equal find(".todo").length,num
-
-parseStandardTestParams = (a1,a2) ->
-  testFunc = null
-  numTodos = 3
-
-  if a2
-    testFunc = a2
-    numTodos = a1
-  else
-    testFunc = a1
-
-  {testFunc: testFunc, numTodos: numTodos}
-
-
-standardTest = (name,num,f) ->
-  ops = parseStandardTestParams(num,f)
-
-  test name, ->
-    ops.testFunc()
-    shouldHaveTodos ops.numTodos
-
-equalFails = (actual,ops) ->
-  equal actual, ops.current
-
-
-
-
 
 FilteredArray = Ember.ArrayProxy.extend
   arrangedContent: (->
@@ -100,8 +70,34 @@ FilteredPromiseArray = FilteredPromiseDumbArray.extend
       @get('arrangedContent')
       success(this)
 
-# does not return properly filtered array
 standardTest "route with filtered array", 2, ->
   Pretender.findFunc = (name,store,params) -> 
     all = store.find(name)
     FilteredPromiseArray.create(promise: all)
+
+
+
+
+
+test "adding record shows in filtered array", ->
+  localStore = null
+  Pretender.findFunc = (name,store,params) -> 
+    localStore = store
+    all = store.find(name)
+    FilteredPromiseArray.create(promise: all)
+
+  shouldHaveTodos 2
+
+  andThen ->
+    newTodo = localStore.createRecord 'todo', name: 'Thing', completed: false
+  
+  andThen ->
+    equal find(".todo").length,3
+
+  andThen ->
+    newTodo = localStore.createRecord 'todo', name: 'Thing', completed: true
+  
+  andThen ->
+    equal find(".todo").length,3
+
+

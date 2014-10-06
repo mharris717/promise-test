@@ -1,9 +1,11 @@
 `import Ember from 'ember'`
 `import Something from '../helpers/basic-helpers'`
+`import Equals from '../helpers/equals'`
+
+equalArray = Equals.equalArray
+Promise = Ember.RSVP.Promise
 
 module 'Unit - Promise Mixin'
-
-Promise = Ember.RSVP.Promise
 
 asyncTest 'in ObjectController', ->
   Greeting = Ember.Object.extend

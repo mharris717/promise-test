@@ -1,5 +1,8 @@
 `import Ember from 'ember'`
 `import Something from '../helpers/basic-helpers'`
+`import Equals from '../helpers/equals'`
+
+equalArray = Equals.equalArray
 
 module 'Unit - Filtered Array'
 

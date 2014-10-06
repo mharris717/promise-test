@@ -12,20 +12,10 @@ c = ->
   Ember.Test.registerHelper "shouldBeThree", (app, n, context) ->
     equal n, 3
 
-  forEachArray = (a) ->
-    res = []
-    a.forEach (obj) -> res.push(obj)
-    res
+  Ember.Test.registerHelper "shouldHaveTodos", (app,num,context) ->
+    visit("/todos").then ->
+      equal find(".todo").length,num
 
-  Ember.Test.registerHelper "equalArray", (app,a,b,context) ->
-    a = forEachArray(a)
-    b = forEachArray(b)
-
-    equal a.length,b.length
-    i = 0
-    while i < a.length
-      equal a[i],b[i]
-      i += 1
 
 c()
 
