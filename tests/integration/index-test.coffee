@@ -7,7 +7,7 @@ Promise = Ember.RSVP.Promise
 App = null
 server = null
 
-module 'Integration - Todo Index',
+module 'Integration - Index',
   setup: -> 
     App = startApp()
     server = pretenderServer()
@@ -18,19 +18,32 @@ module 'Integration - Todo Index',
 
     Pretender.findFunc = null
 
-test 'Should showo todos', ->
+shouldHaveTodos = (num) ->
+  visit("/todos").then ->
+    equal find(".todo").length,num
+
+standardTest = (name,num,f) ->
+  if !f
+    f = num
+    num = 3
+  test name, ->
+    f()
+    shouldHaveTodos num
+
+standardTest 'Should showo todos', ->
   Pretender.findFunc = (name,store,params) -> 
     new Promise (resolve,reject) ->
       resolve(store.find(name))
-        
-  visit("/todos").then ->
-    equal find(".todo").length,3
 
-test 'Should showo todos', ->
+standardTest 'Should showo todos', ->
   Pretender.findFunc = (name,store,params) -> 
     new Promise (resolve,reject) ->
       store.find(name).then (res) ->
         resolve(res)
 
-  visit("/todos").then ->
-    equal find(".todo").length,3
+standardTest 'Should showo todos', ->
+  Pretender.findFunc = (name,store,params) -> 
+    new Promise (resolve,reject) ->
+      all = store.find(name)
+      all.then (res) ->
+        resolve(all)

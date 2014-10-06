@@ -1,26 +1,9 @@
 `import Ember from 'ember'`
+`import Something from '../helpers/basic-helpers'`
 
-module 'Integration - Todo Index'
+module 'Unit - Promise Mixin'
 
 Promise = Ember.RSVP.Promise
-
-test 'smoke', ->
-  equal 2,2
-
-forEachArray = (a) ->
-  res = []
-  a.forEach (obj) -> res.push(obj)
-  res
-
-equalArray = (a,b) ->
-  a = forEachArray(a)
-  b = forEachArray(b)
-
-  equal a.length,b.length
-  i = 0
-  while i < a.length
-    equal a[i],b[i]
-    i += 1
 
 asyncTest 'in ObjectController', ->
   Greeting = Ember.Object.extend
@@ -47,7 +30,6 @@ asyncTest 'in ObjectController', ->
 
     # property on controller is accessable
     equal object.get('tripled'), "HelloHelloHello"
-
 
 
 asyncTest 'in ArrayController', ->
@@ -95,6 +77,3 @@ asyncTest 'in ArrayProxy', ->
 
     equal array.get('isPending'), false
     equal array.get('isFulfilled'), true
-
-
-

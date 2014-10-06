@@ -1,6 +1,6 @@
 `import Ember from 'ember'`
 
-module 'Integration - Todo Index'
+module 'Unit - Basic Promises'
 
 Promise = Ember.RSVP.Promise
 
