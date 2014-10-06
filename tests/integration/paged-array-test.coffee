@@ -26,9 +26,6 @@ module 'Integration - Paged Array',
 
     Pretender.findFunc = null
 
-test "smoke", ->
-  equal 2,2
-
 PagedArray = Ember.ArrayProxy.extend
   page: 1
   perPage: 2

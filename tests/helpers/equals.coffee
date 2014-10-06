@@ -9,7 +9,7 @@ res.equalArray = (a,b) ->
   a = forEachArray(a)
   b = forEachArray(b)
 
-  equal "#{a}","#{b}"
+  equal "[#{a}]","[#{b}]"
   
   equal a.length,b.length
   i = 0
