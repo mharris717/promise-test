@@ -2,7 +2,12 @@ res = {}
 
 forEachArray = (a) ->
   res = []
+
   a.forEach (obj) -> res.push(obj)
+
+  if res.length > 0 && res[0].get && res[0].get('num')
+    res = res.map (x) -> x.get('num')
+
   res
 
 res.equalArray = (a,b) ->
