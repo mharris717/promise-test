@@ -16,6 +16,10 @@ c = ->
     visit("/todos").then ->
       equal find(".todo").length,num
 
+  Ember.Test.registerHelper "shouldHaveTodosAfter", (app,num,f,context) ->
+    andThen(f)
+    andThen ->
+      equal find(".todo").length,num
 
 c()
 

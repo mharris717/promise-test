@@ -52,3 +52,16 @@ test "add to all", ->
   all.pushObject(Num(0.5))
 
   equalArray paged, [0.5,1]
+
+asyncTest 'promise something', ->
+  promise = new Promise (success, failure) ->
+    setTimeout ->
+      success(Num.A([1,5,2,4,3]))
+      QUnit.start()
+    ,10
+
+  paged = SortablePagedArray.extend(Ember.PromiseProxyMixin).create(promise: promise)
+  paged.then ->
+    equalArray paged, [1,2]
+
+  

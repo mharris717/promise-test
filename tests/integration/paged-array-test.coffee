@@ -7,24 +7,22 @@
 
 Promise = Ember.RSVP.Promise
 
-shouldHaveTodosAfter = (num, f) ->
-  andThen(f)
-  andThen ->
-    equal find(".todo").length,num
-
 App = null
 server = null
 
-module 'Integration - Paged Array',
-  setup: -> 
-    App = startApp()
-    server = pretenderServer()
+standardModule = (name) ->
+  module name, 
+    setup: -> 
+      App = startApp()
+      server = pretenderServer()
 
-  teardown: -> 
-    Ember.run(App,'destroy')
-    server.shutdown()
+    teardown: -> 
+      Ember.run(App,'destroy')
+      server.shutdown()
 
-    Pretender.findFunc = null
+      Pretender.findFunc = null
+
+standardModule 'Integration - Paged Array'
 
 PagedArray = Ember.ArrayProxy.extend
   page: 1
