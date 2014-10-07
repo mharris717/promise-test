@@ -117,7 +117,8 @@ test "refresh test", ->
 
   visit("/todos").then ->
     equalArray pageParams(), [1]
-    click("a#refresh")
+    fillIn "#arbitrary-action input", "refresh"
+    click("#arbitrary-action a")
 
   andThen ->
     equalArray pageParams(), [1,1]

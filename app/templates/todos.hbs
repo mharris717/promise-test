@@ -16,4 +16,12 @@
 
 <button {{action "save"}}>Save</button>
 
-<a {{action "refresh"}} href="#" id="refresh">Refresh</a>
+<span id="arbitrary-action">
+  <span class="name">
+    {{input type="text" value=arbitraryActionName}}
+  </span>
+
+  <span class="link">
+    <a {{action "triggerArbitraryAction"}} href="#">Trigger</a>
+  </span>
+</span>

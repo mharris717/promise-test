@@ -5,4 +5,9 @@ c = Ember.ArrayController.extend
     save: ->
       @forEach (t) -> t.save()
 
+    triggerArbitraryAction: ->
+      name = @get("arbitraryActionName")
+      throw "no action" unless name
+      @send(name)
+
 `export default c`
