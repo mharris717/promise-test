@@ -6,6 +6,7 @@
 `import Equals from '../helpers/equals'`
 
 Promise = Ember.RSVP.Promise
+equalArray = Equals.equalArray
 
 shouldHaveTodosAfter = (num, f) ->
   andThen(f)
@@ -39,11 +40,13 @@ FakeStore = Ember.Object.extend
     new Promise (success, failure) =>
       setTimeout =>
         page = params.page || 1
-        success(@objsForPage(1))
+        success(@objsForPage(page))
       ,10
 
 PagedRemoteArray = Ember.ArrayProxy.extend Ember.PromiseProxyMixin,
-  page: 1
+  init: ->
+    @setContent()
+
   perPage: 2
 
   store: null
@@ -55,7 +58,10 @@ PagedRemoteArray = Ember.ArrayProxy.extend Ember.PromiseProxyMixin,
 
   setPage: (page) ->
     @set 'page', page
-    @setContent()
+
+  pageObserver: (-> 
+    if @get('page')
+      @setContent()).observes("page")
 
 
 standardTest "route with paged array", 2, ->
@@ -63,6 +69,59 @@ standardTest "route with paged array", 2, ->
     all = realStore.find(name)
     fakeStore = FakeStore.create(all: all)
 
-    paged = PagedRemoteArray.create(store: fakeStore)
-    paged.setPage params.page
-    paged
+    PagedRemoteArray.create(store: fakeStore, page: params.page)
+
+standardTest "route with paged array - page 2", 1, ->
+  Pretender.findFunc = (name,realStore,params) -> 
+    all = realStore.find(name)
+    fakeStore = FakeStore.create(all: all)
+
+    PagedRemoteArray.create(store: fakeStore, page: 2)
+
+test "changing page", ->
+  paged = null
+  Pretender.findFunc = (name,realStore,params) -> 
+    all = realStore.find(name)
+    fakeStore = FakeStore.create(all: all)
+
+    paged = PagedRemoteArray.create(store: fakeStore, page: params.page)
+
+  visit("/todos").then ->
+    equal find(".todo").length,2
+    paged.setPage 2
+    equal find(".todo").length,2
+
+    paged.then ->
+      # doesn't work
+      # equal find(".todo").length,1
+
+test "refresh test", ->
+  route = null
+  allParams = []
+
+  pageParams = ->
+    allParams.map (p) -> p.page || 1
+
+  Pretender.findFunc = (name,realStore,params, r) -> 
+    if !r
+      throw "no route"
+
+    params.page = params.page || 1
+    route = r
+    allParams.push(params)
+
+    all = realStore.find(name)
+    fakeStore = FakeStore.create(all: all)
+
+    paged = PagedRemoteArray.create(store: fakeStore, page: params.page)
+
+  visit("/todos").then ->
+    equalArray pageParams(), [1]
+    click("a#refresh")
+
+  andThen ->
+    equalArray pageParams(), [1,1]
+
+    
+
+

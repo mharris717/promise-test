@@ -62,14 +62,11 @@ asyncTest "thing", ->
 
 PagedRemotePromiseArray = PagedRemoteArray.extend Ember.PromiseProxyMixin, 
   setContent: ->
-    page = @get('page')
-    console.debug "setContent, page #{page}"
     promise = @store.find('todo', page: @get('page'))
     @set "promise", promise
 
   setPage: (page) ->
     @set 'page', page
-    # @setContent()
 
   pageObserver: (-> 
     if @get('page')
